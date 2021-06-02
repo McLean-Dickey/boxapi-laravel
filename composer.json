@@ -1,0 +1,48 @@
+{
+    "name": "kaswell/laravel-boxapi",
+    "description": "Box API Library",
+    "version": "1.0.0",
+    "minimum-stability": "dev",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aliaksandr Kasatkin",
+            "email": "a.kasatkin@nonium.by"
+        }
+    ],
+    "require": {
+        "php": ">=7.3",
+        "ext-json": "*",
+        "firebase/php-jwt": "^5.2"
+    },
+    "require-dev": {
+        "illuminate/support": "*",
+        "illuminate/http": "*",
+        "guzzlehttp/guzzle": "*"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Kaswell\\BoxApi\\": "src/"
+        },
+        "files": [
+            "config/constants.php"
+        ]
+    },
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kaswell\\BoxApi\\BoxApiServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "composer dump-autoload --optimize"
+        ]
+    }
+}

@@ -5,7 +5,7 @@ return [
 
     'config_file' => env('BOX_APP_CONFIG_FILE', 'box_app_config.json'),
 
-    'dev_token' => env('BOX_DEV_TOKEN', null),
+    'dev_token' => env('BOX_APP_DEV_TOKEN', null),
 
     'app_user' => [
         "id" => env('BOX_APP_USER_ID', null),

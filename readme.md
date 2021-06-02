@@ -2,9 +2,6 @@
 
 [![License](https://img.shields.io/github/license/kaswell/laravel-boxapi?style=flat-square)](license.md)
 [![Total size](https://img.shields.io/github/repo-size/kaswell/laravel-boxapi?style=flat-square)](https://packagist.org/packages/kaswell/laravel-boxapi)
-[![Latest Version](https://img.shields.io/github/v/release/kaswell/laravel-boxapi?style=flat-square)](https://packagist.org/packages/kaswell/laravel-boxapi)
-[![Latest Release](https://img.shields.io/github/release-date/kaswell/laravel-boxapi?style=flat-square)](https://packagist.org/packages/kaswell/laravel-boxapi)
-[![Total Downloads](https://img.shields.io/packagist/dt/kaswell/laravel-boxapi.svg?style=flat-square)](https://packagist.org/packages/kaswell/laravel-boxapi)
 
 BoxAPI for Laravel
 ======
@@ -31,8 +28,9 @@ The package will automatically register itself.
 
 Download from [Box Developers](https://gdmg.app.box.com/developers/console) config json file and save into `/storage/app/box_app_config.json` and add into env file next optional constants
 ```bash 
+BOX_APP_DEV_MODE=false
 BOX_APP_CONFIG_FILE="box_app_config.json"
-BOX_DEV_TOKEN=""
+BOX_APP_DEV_TOKEN=""
 BOX_APP_USER_ID=""
 BOX_APP_USER_LOGIN=""
 ```
@@ -48,7 +46,7 @@ Usage
 You can use class:
 ```bash 
 use Kaswell\BoxApi\BoxApi;
-$response = (new BoxApi())->getFolderInfo();
+$response = app(BoxApi::class)->getFolderInfo();
 ```
 or use facade:
 ```bash 

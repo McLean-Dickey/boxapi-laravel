@@ -4,13 +4,14 @@ namespace Kaswell\BoxApi;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
-use Kaswell\BoxApi\Auth\AuthJWT;
+use Illuminate\Support\Facades\Log;
+use Kaswell\BoxApi\Auth\Authenticate;
 
 /**
  * Class ApiAbstract
  * @package Kaswell\BoxApi
  */
-class ApiAbstract extends AuthJWT
+class ApiAbstract extends Authenticate
 {
     /**
      * @var string
@@ -33,6 +34,16 @@ class ApiAbstract extends AuthJWT
     protected $data = [];
 
     /**
+     * @param $error
+     * @return $this
+     */
+    protected function setErrors($error)
+    {
+        $this->errors[] = $error;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getErrors(): array
@@ -47,24 +58,24 @@ class ApiAbstract extends AuthJWT
     public function setData(array $data)
     {
         $this->data = array_merge($this->data, $data);
-
         return $this;
     }
 
     /**
      * @var int
      */
-    public $response_status;
+    protected $code;
 
     /**
      * @var string
      */
-    public $error_message;
+    protected $message;
 
     /**
      * @param int $code
+     * @return array
      */
-    protected function getStatus(int $code)
+    protected function getStatus(int $code): array
     {
         $returnedCode = [
             100 => "Continue",
@@ -110,8 +121,13 @@ class ApiAbstract extends AuthJWT
             505 => "HTTP Version Not Supported"
         ];
 
-        $this->response_status = $code;
-        $this->error_message = $returnedCode[$code];
+        $this->code = $code;
+        $this->message = $returnedCode[$code];
+
+        return [
+            'code' => $this->code,
+            'message' => $this->message
+        ];
     }
 
     /**
@@ -122,12 +138,25 @@ class ApiAbstract extends AuthJWT
     protected function send(string $path, string $method = GET_METHOD)
     {
         try {
-            $response = Http::withToken($this->token, 'Bearer')->baseUrl($this->base_api_url)->bodyFormat($this->bodyFormat)
-                ->withOptions([$this->bodyFormat => $this->data])->send($method, $path);
-            $this->getStatus((integer)$response->status());
+            /** @var \Illuminate\Http\Client\Response $response */
+            $response = Http::withToken($this->token, 'Bearer')
+                ->baseUrl($this->base_api_url)
+                ->bodyFormat($this->bodyFormat)
+                ->withOptions([$this->bodyFormat => $this->data])
+                ->send($method, $path);
         } catch (Exception $exception) {
+            $this->setErrors($exception);
             $response = false;
         }
         return $response;
+    }
+
+    /**
+     * @return void
+     */
+    public function __destruct()
+    {
+        if (count($this->errors) > 0)
+            Log::error('Box API has errors.', $this->errors);
     }
 }

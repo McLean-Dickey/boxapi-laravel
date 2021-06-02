@@ -17,7 +17,7 @@ class BoxApiServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/box-api.php' => config_path('box-api.php'),
+            __DIR__ . '/../config/boxapi.php' => config_path('boxapi.php'),
         ], 'config');
     }
 
@@ -29,11 +29,11 @@ class BoxApiServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/box-api.php', 'box-api'
+            __DIR__ . '/../config/boxapi.php', 'boxapi'
         );
 
         $this->app->bind('BoxApi', function (){
-            return new \Kaswell\BoxApi\BoxApi();
+            return new \Kaswell\BoxApi\BoxApi;
         });
     }
 }

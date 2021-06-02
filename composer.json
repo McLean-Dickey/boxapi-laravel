@@ -1,25 +1,29 @@
 {
     "name": "kaswell/laravel-boxapi",
-    "description": "Box API Library",
-    "version": "1.0.0",
-    "minimum-stability": "dev",
+    "description": "BoxAPI for Laravel",
+    "version": "1.0.1",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Aliaksandr Kasatkin",
-            "email": "a.kasatkin@nonium.by"
+            "email": "a.kasatkin@nonium.by",
+            "homepage": "https://nonium.by",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": ">7.3",
         "ext-json": "*",
-        "firebase/php-jwt": "^5.2"
+        "ext-curl": "*",
+        "ext-openssl": "*",
+        "ext-fileinfo": "*",
+        "firebase/php-jwt": "^5.2",
+        "guzzlehttp/guzzle": "^6.5",
+        "laravel/framework": ">7.0"
     },
     "require-dev": {
-        "illuminate/support": "*",
-        "illuminate/http": "*",
-        "guzzlehttp/guzzle": "*"
+        "roave/security-advisories": "dev-latest"
     },
     "config": {
         "sort-packages": true
@@ -29,10 +33,11 @@
             "Kaswell\\BoxApi\\": "src/"
         },
         "files": [
-            "config/constants.php"
+            "src/constants.php"
         ]
     },
     "prefer-stable": true,
+    "minimum-stability": "dev",
     "extra": {
         "laravel": {
             "providers": [

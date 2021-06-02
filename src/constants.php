@@ -5,6 +5,7 @@ define('EMPTY_ARRAY', []);
 define('GET_METHOD', 'get');
 define('POST_METHOD', 'post');
 define('PUT_METHOD', 'put');
+define('PUTCH_METHOD', 'putch');
 define('DELETE_METHOD', 'delete');
 
 define('ROLE_OWNER', 'owner');

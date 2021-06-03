@@ -90,7 +90,7 @@ abstract class Authenticate
                 $response = Http::asForm()->post($this->auth_path, $data);
 
                 if ($response->successful())
-                    $this->token = $response->json('access_token', '');
+                    $this->token = $response->json('access_token', '')['access_token'];
 
             }
         } catch (Exception $exception) {

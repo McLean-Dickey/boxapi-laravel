@@ -34,6 +34,21 @@ class ApiAbstract extends Authenticate
     protected $data = [];
 
     /**
+     * @var int
+     */
+    protected $status_code;
+
+    /**
+     * @var string
+     */
+    protected $status_message = '';
+
+    /**
+     * @var bool
+     */
+    protected $as_array = false;
+
+    /**
      * @param $error
      * @return $this
      */
@@ -55,27 +70,17 @@ class ApiAbstract extends Authenticate
      * @param array $data
      * @return $this
      */
-    public function setData(array $data)
+    protected function setData(array $data)
     {
         $this->data = array_merge($this->data, $data);
         return $this;
     }
 
     /**
-     * @var int
-     */
-    protected $code;
-
-    /**
-     * @var string
-     */
-    protected $message;
-
-    /**
      * @param int $code
-     * @return array
+     * @return void
      */
-    protected function getStatus(int $code): array
+    protected function setStatus(int $code): array
     {
         $returnedCode = [
             100 => "Continue",
@@ -121,19 +126,35 @@ class ApiAbstract extends Authenticate
             505 => "HTTP Version Not Supported"
         ];
 
-        $this->code = $code;
-        $this->message = $returnedCode[$code];
+        $this->status_code = $code;
+        $this->status_message = $returnedCode[$code];
+    }
 
+    /**
+     * @return array
+     */
+    public function getStatus()
+    {
         return [
-            'code' => $this->code,
-            'message' => $this->message
+            'code' => $this->status_code,
+            'message' => $this->status_message,
         ];
+    }
+
+    /**
+     * @return $this
+     */
+    public function asArray()
+    {
+        $this->as_array = true;
+        return $this;
     }
 
     /**
      * @param string $path
      * @param string $method
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @param bool $as_array
+     * @return array|object|void
      */
     protected function send(string $path, string $method = GET_METHOD)
     {
@@ -146,9 +167,22 @@ class ApiAbstract extends Authenticate
                 ->send($method, $path);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
-        return $response;
+        return $this->parseResponse($response);
+    }
+
+    /**
+     * @param \Illuminate\Http\Client\Response $response
+     * @return object|array|void
+     */
+    protected function parseResponse(\Illuminate\Http\Client\Response $response)
+    {
+        if ($response instanceof \Illuminate\Http\Client\Response){
+            $this->setStatus($response->status());
+            return $this->as_array ? $response->json() : $response->object();
+        }
+        return;
     }
 
     /**

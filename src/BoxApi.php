@@ -14,7 +14,7 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $name
      * @param string $parent_folder_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function createFolder(string $name, string $parent_folder_id = '0')
     {
@@ -29,14 +29,14 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, POST_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
 
     /**
      * @param string $folder_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function getFolderList(string $folder_id = '0')
     {
@@ -45,14 +45,14 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, GET_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
 
     /**
      * @param string $folder_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function getFolderInfo(string $folder_id = '0')
     {
@@ -61,7 +61,7 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, GET_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
@@ -69,7 +69,7 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param array $data
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function updateFolder(string $folder_id, array $data = [])
     {
@@ -79,7 +79,7 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, PUT_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
@@ -87,7 +87,7 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param string $name
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function renameFolder(string $folder_id, string $name)
     {
@@ -98,7 +98,7 @@ class BoxApi extends ApiAbstract
             $response = $this->updateFolder($folder_id);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
@@ -106,7 +106,7 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param string $parent_folder_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function replaceFolder(string $folder_id, string $parent_folder_id = '0')
     {
@@ -119,7 +119,7 @@ class BoxApi extends ApiAbstract
             $response = $this->updateFolder($folder_id);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
@@ -127,7 +127,7 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param bool $recursive
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function deleteFolder(string $folder_id, bool $recursive = true)
     {
@@ -147,14 +147,14 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, DELETE_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
 
     /**
      * @param string $folder_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function getFolderCollaborations(string $folder_id)
     {
@@ -163,7 +163,7 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, GET_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
@@ -172,7 +172,7 @@ class BoxApi extends ApiAbstract
      * @param string $folder_id
      * @param string $user_email
      * @param string $role
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function createFolderCollaborations(string $folder_id, string $user_email, string $role = ROLE_VIEWER_UPLOADER)
     {
@@ -192,7 +192,7 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, POST_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
@@ -200,7 +200,7 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $collaboration_id
      * @param string $role
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function updateCollaborations(string $collaboration_id, string $role = ROLE_VIEWER_UPLOADER)
     {
@@ -212,14 +212,14 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, PUT_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
 
     /**
      * @param string $collaboration_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function deleteFolderCollaborations(string $collaboration_id)
     {
@@ -228,14 +228,14 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, DELETE_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
 
     /**
      * @param string $file_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function getFileInfo(string $file_id)
     {
@@ -244,7 +244,7 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, GET_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
@@ -253,7 +253,7 @@ class BoxApi extends ApiAbstract
      * @param string $filepath
      * @param string $name
      * @param string $parent_folder_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return object|void
      */
     public function uploadFile(string $filepath, string $name, string $parent_folder_id = '0')
     {
@@ -273,14 +273,14 @@ class BoxApi extends ApiAbstract
                 ->withOptions([$this->bodyFormat => $this->data])->send(POST_METHOD, $path);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
-        return $response;
+        return $response->object();
     }
 
     /**
      * @param string $file_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function deleteFile(string $file_id)
     {
@@ -289,14 +289,14 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, DELETE_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }
 
     /**
      * @param string $user_id
-     * @return false|\GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+     * @return array|object|void
      */
     public function getUser(string $user_id = 'me')
     {
@@ -305,7 +305,7 @@ class BoxApi extends ApiAbstract
             $response = $this->send($path, GET_METHOD);
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            $response = false;
+            return;
         }
         return $response;
     }

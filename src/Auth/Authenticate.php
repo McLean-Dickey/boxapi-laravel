@@ -51,11 +51,7 @@ abstract class Authenticate
             $this->config = json_decode(file_get_contents(__DIR__ . '/box_app_config.json'));
         }
 
-        if (Cache::has($this->config->enterpriseID)) {
-            $this->token = Cache::get($this->config->enterpriseID);
-        } else {
-            $this->getAccessToken();
-        }
+        $this->getAccessToken();
     }
 
     /**
@@ -63,40 +59,35 @@ abstract class Authenticate
      */
     protected function getAccessToken(): void
     {
-        try {
-            if (config('boxapi.dev_mode')) {
-                $this->token = $this->dev_token;
-            } else {
+        if (config('boxapi.dev_mode')) {
+            $this->token = $this->dev_token;
+        } else {
 
-                $key = openssl_pkey_get_private($this->config->boxAppSettings->appAuth->privateKey, $this->config->boxAppSettings->appAuth->passphrase);
+            $key = openssl_pkey_get_private($this->config->boxAppSettings->appAuth->privateKey, $this->config->boxAppSettings->appAuth->passphrase);
 
-                $claims = [
-                    'iss' => $this->config->boxAppSettings->clientID,
-                    'sub' => $this->config->enterpriseID,
-                    'box_sub_type' => 'enterprise', // 'user'
-                    'aud' => $this->auth_path,
-                    'jti' => base64_encode(random_bytes(64)),
-                    'exp' => time() + 45,
-                    'kid' => $this->config->boxAppSettings->appAuth->publicKeyID
-                ];
+            $claims = [
+                'iss' => $this->config->boxAppSettings->clientID,
+                'sub' => $this->config->enterpriseID,
+                'box_sub_type' => 'enterprise', // 'user'
+                'aud' => $this->auth_path,
+                'jti' => base64_encode(random_bytes(64)),
+                'exp' => time() + 45,
+                'kid' => $this->config->boxAppSettings->appAuth->publicKeyID
+            ];
 
-                $data = [
-                    'client_id' => $this->config->boxAppSettings->clientID,
-                    'client_secret' => $this->config->boxAppSettings->clientSecret,
-                    'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-                    'assertion' => JWT::encode($claims, $key, 'RS512'),
-                ];
+            $data = [
+                'client_id' => $this->config->boxAppSettings->clientID,
+                'client_secret' => $this->config->boxAppSettings->clientSecret,
+                'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                'assertion' => JWT::encode($claims, $key, 'RS512'),
+            ];
 
-                $response = Http::asForm()->post($this->auth_path, ['form_params' => $data]);
+            $response = Http::asForm()->post($this->auth_path, ['form_params' => $data]);
 
-                if ($response->successful())
-                    $this->token = $response->json('access_token', '');
+            if ($response->successful())
+                $this->token = $response->json('access_token', '');
 
-            }
-        } catch (Exception $exception) {
-            return;
         }
-        Cache::put($this->config->enterpriseID, $this->token, now()->addSeconds(45));
     }
 
 

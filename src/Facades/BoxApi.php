@@ -3,6 +3,7 @@
 namespace Kaswell\BoxApi\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Kaswell\BoxApi\BoxApi as BoxApiMethods;
 
 /**
  * Class BoxApi
@@ -31,8 +32,11 @@ use Illuminate\Support\Facades\Facade;
  */
 class BoxApi extends Facade
 {
-    protected static function getFacadeAccessor()
+    /**
+     * @return string
+     */
+    protected static function getFacadeAccessor(): string
     {
-        return 'BoxApi';
+        return BoxApiMethods::class;
     }
 }

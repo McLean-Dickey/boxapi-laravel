@@ -3,7 +3,9 @@
 namespace Kaswell\BoxApi;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 /**
  * Class BoxApi
@@ -13,6 +15,15 @@ class BoxApi extends ApiAbstract
 {
     /**
      * @param string $name
+     * @return string
+     */
+    private static function name(string $name): string
+    {
+        return Str::limit($name, 250, '...');
+    }
+
+    /**
+     * @param string $name
      * @param string $parent_folder_id
      * @return array|object|void
      */
@@ -20,7 +31,7 @@ class BoxApi extends ApiAbstract
     {
         try {
             $this->setData([
-                'name' => $name,
+                'name' => static::name($name),
                 'parent' => [
                     'id' => $parent_folder_id,
                 ]
@@ -74,6 +85,9 @@ class BoxApi extends ApiAbstract
     public function updateFolder(string $folder_id, array $data = [])
     {
         try {
+            if (Arr::has($data, 'name'))
+                $data['name'] = static::name($data['name']);
+
             $this->setData($data);
             $path = 'folders/' . $folder_id;
             $response = $this->send($path, PUT_METHOD);
@@ -93,7 +107,7 @@ class BoxApi extends ApiAbstract
     {
         try {
             $this->setData([
-                'name' => $name,
+                'name' => static::name($name),
             ]);
             $response = $this->updateFolder($folder_id);
         } catch (Exception $exception) {

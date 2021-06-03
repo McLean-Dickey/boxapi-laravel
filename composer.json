@@ -1,53 +1,56 @@
 {
-    "name": "kaswell/laravel-boxapi",
-    "description": "BoxAPI for Laravel",
-    "version": "1.0.4",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Aliaksandr Kasatkin",
-            "email": "a.kasatkin@nonium.by",
-            "homepage": "https://nonium.by",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": ">7.3",
-        "ext-json": "*",
-        "ext-curl": "*",
-        "ext-openssl": "*",
-        "ext-fileinfo": "*",
-        "firebase/php-jwt": "^5.2",
-        "guzzlehttp/guzzle": "^6.5",
-        "laravel/framework": ">7.0"
-    },
-    "require-dev": {
-        "roave/security-advisories": "dev-latest"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "autoload": {
-        "psr-4": {
-            "Kaswell\\BoxApi\\": "src/"
-        },
-        "files": [
-            "src/constants.php"
-        ]
-    },
-    "prefer-stable": true,
-    "minimum-stability": "dev",
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Kaswell\\BoxApi\\BoxApiServiceProvider"
-            ]
-        }
-    },
-    "scripts": {
-        "post-update-cmd": [
-            "composer dump-autoload --optimize"
-        ]
+  "name": "kaswell/laravel-boxapi",
+  "description": "BoxAPI for Laravel",
+  "keywords": [
+    "laravel",
+    "box",
+    "api"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Aliaksandr Kasatkin",
+      "email": "a.kasatkin@nonium.by",
+      "homepage": "https://nonium.by",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": ">7.3",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-openssl": "*",
+    "ext-fileinfo": "*",
+    "firebase/php-jwt": "^5.2",
+    "guzzlehttp/guzzle": "^6.5",
+    "laravel/framework": ">7.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Kaswell\\BoxApi\\": "src/"
+    },
+    "files": [
+      "src/constants.php"
+    ]
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev",
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Kaswell\\BoxApi\\BoxApiServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "post-update-cmd": [
+      "composer dump-autoload --optimize"
+    ]
+  }
 }

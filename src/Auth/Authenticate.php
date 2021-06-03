@@ -17,25 +17,25 @@ abstract class Authenticate
     /**
      * @var string $auth_path
      */
-    protected $auth_path = 'https://api.box.com/oauth2/token';
+    private $auth_path = 'https://api.box.com/oauth2/token';
 
     /**
      * Config Box App from file
      * @var mixed
      */
-    protected $config;
-
-    /**
-     * Access Token
-     * @var string $token
-     */
-    protected $token = '';
+    private $config;
 
     /**
      * Access Token for developer
      * @var string $dev_token
      */
-    protected $dev_token = '';
+    private $dev_token = '';
+
+    /**
+     * Access Token
+     * @var string $token
+     */
+    private $token = '';
 
     /**
      * AuthenticateAbstract constructor.
@@ -43,13 +43,13 @@ abstract class Authenticate
      */
     public function __construct()
     {
-        $this->dev_token = config('boxapi.dev_token');
-
         if (Storage::exists(config('boxapi.config_file'))) {
             $this->config = json_decode(Storage::get(config('boxapi.config_file')));
         } else {
             $this->config = json_decode(file_get_contents(__DIR__ . '/box_app_config.json'));
         }
+
+        $this->dev_token = config('boxapi.dev_token');
 
         if (Cache::has($this->config->enterpriseID)) {
             $this->token = Cache::get($this->config->enterpriseID);
@@ -98,6 +98,7 @@ abstract class Authenticate
     }
 
     /**
+     * @deprecated current method not supported
      * @return void
      */
     private function getClientCredentialGrant(): void
@@ -119,7 +120,6 @@ abstract class Authenticate
         }
     }
 
-
     /**
      * @return string
      */
@@ -127,11 +127,4 @@ abstract class Authenticate
     {
         return $this->token;
     }
-    /*
-     * --data-urlencode ‘client_id=<client_id>’ \
-     * --data-urlencode ‘client_secret=<client_secret>’ \
-     * --data-urlencode ‘grant_type=client_credentials’ \
-     * --data-urlencode ‘box_subject_type=enterprise’ \
-     * --data-urlencode ‘box_subject_id=<enterprise_id>’
-     */
 }

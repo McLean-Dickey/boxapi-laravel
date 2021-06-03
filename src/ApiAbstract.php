@@ -23,6 +23,8 @@ class ApiAbstract extends Authenticate
      */
     protected $bodyFormat = 'json';
 
+    protected $contentType = 'application/json';
+
     /**
      * @var array
      */
@@ -47,6 +49,16 @@ class ApiAbstract extends Authenticate
      * @var bool
      */
     protected $as_array = false;
+
+    /**
+     * @return $this
+     */
+    protected function multipart()
+    {
+        $this->bodyFormat = 'multipart';
+        $this->contentType = 'multipart/form-data';
+        return $this;
+    }
 
     /**
      * @param $error
@@ -82,58 +94,14 @@ class ApiAbstract extends Authenticate
      */
     protected function setStatus(int $code)
     {
-        $returnedCode = [
-            100 => "Continue",
-            101 => "Switching Protocols",
-            200 => "OK",
-            201 => "Created",
-            202 => "Accepted",
-            203 => "Non-Authoritative Information",
-            204 => "No Content",
-            205 => "Reset Content",
-            206 => "Partial Content",
-            300 => "Multiple Choices",
-            301 => "Moved Permanently",
-            302 => "Found",
-            303 => "See Other",
-            304 => "Not Modified",
-            305 => "Use Proxy",
-            306 => "(Unused)",
-            307 => "Temporary Redirect",
-            400 => "Bad Request",
-            401 => "Unauthorized",
-            402 => "Payment Required",
-            403 => "Forbidden",
-            404 => "Not Found",
-            405 => "Method Not Allowed",
-            406 => "Not Acceptable",
-            407 => "Proxy Authentication Required",
-            408 => "Request Timeout",
-            409 => "Conflict",
-            410 => "Gone",
-            411 => "Length Required",
-            412 => "Precondition Failed",
-            413 => "Request Entity Too Large",
-            414 => "Request-URI Too Long",
-            415 => "Unsupported Media Type",
-            416 => "Requested Range Not Satisfiable",
-            417 => "Expectation Failed",
-            500 => "Internal Server Error",
-            501 => "Not Implemented",
-            502 => "Bad Gateway",
-            503 => "Service Unavailable",
-            504 => "Gateway Timeout",
-            505 => "HTTP Version Not Supported"
-        ];
-
         $this->status_code = $code;
-        $this->status_message = $returnedCode[$code];
+        $this->status_message = RETURNED_CODE[$code];
     }
 
     /**
      * @return array
      */
-    public function getStatus()
+    protected function getStatus()
     {
         return [
             'code' => $this->status_code,
@@ -162,6 +130,7 @@ class ApiAbstract extends Authenticate
             /** @var \Illuminate\Http\Client\Response $response */
             $response = Http::withToken($this->token, 'Bearer')
                 ->baseUrl($this->base_api_url)
+                ->contentType($this->contentType)
                 ->bodyFormat($this->bodyFormat)
                 ->withOptions([$this->bodyFormat => $this->data])
                 ->send($method, $path);
@@ -178,7 +147,7 @@ class ApiAbstract extends Authenticate
      */
     protected function parseResponse(\Illuminate\Http\Client\Response $response)
     {
-        if ($response instanceof \Illuminate\Http\Client\Response){
+        if ($response instanceof \Illuminate\Http\Client\Response) {
             $this->setStatus($response->status());
             return $this->as_array ? $response->json() : $response->object();
         }
@@ -191,6 +160,6 @@ class ApiAbstract extends Authenticate
     public function __destruct()
     {
         if (count($this->errors) > 0)
-            Log::error('Box API has errors.', $this->errors);
+            Log::error('Box API has errors.', ['status' => $this->getStatus(), 'errors' => $this->errors]);
     }
 }

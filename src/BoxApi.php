@@ -253,7 +253,7 @@ class BoxApi extends ApiAbstract
      * @param string $filepath
      * @param string $name
      * @param string $parent_folder_id
-     * @return object|void
+     * @return array|object|void
      */
     public function uploadFile(string $filepath, string $name, string $parent_folder_id = '0')
     {
@@ -268,14 +268,12 @@ class BoxApi extends ApiAbstract
                 'file' => new \CurlFile($filepath, mime_content_type($filepath), $name)
             ]);
             $path = 'files/content';
-            $response = Http::withToken($this->token, 'Bearer')->baseUrl($this->base_api_url)->bodyFormat('multipart')
-                ->contentType('multipart/form-data')
-                ->withOptions([$this->bodyFormat => $this->data])->send(POST_METHOD, $path);
+            $response = $this->multipart()->send(POST_METHOD, $path);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
         }
-        return $response->object();
+        return $response;
     }
 
     /**

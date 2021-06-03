@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Facade;
  * Class BoxApi
  * @package Kaswell\BoxApi\Facades
  *
+ * @method static void asArray()
+ *
  * @method static array|object|void createFolder(string $name, string $parent_folder_id = '0')
  * @method static array|object|void getFolderList(string $folder_id = '0')
  * @method static array|object|void getFolderInfo(string $folder_id = '0')
@@ -22,7 +24,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array|object|void deleteFolderCollaborations(string $collaboration_id)
  *
  * @method static array|object|void getFileInfo(string $file_id)
- * @method static object|void uploadFile(string $filepath, string $name, string $parent_folder_id = '0')
+ * @method static array|object|void uploadFile(string $filepath, string $name, string $parent_folder_id = '0')
  * @method static array|object|void deleteFile(string $file_id)
  *
  * @method static array|object|void getUser(string $user_id = 'me')

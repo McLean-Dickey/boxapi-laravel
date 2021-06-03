@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/github/license/kaswell/laravel-boxapi?style=flat-square)](license.md)
 [![Total size](https://img.shields.io/github/repo-size/kaswell/laravel-boxapi?style=flat-square)](https://packagist.org/packages/kaswell/laravel-boxapi)
+[![Last Version](https://img.shields.io/packagist/v/kaswell/laravel-boxapi?style=flat-square)](https://packagist.org/packages/kaswell/laravel-boxapi)
 
 BoxAPI for Laravel
 ======

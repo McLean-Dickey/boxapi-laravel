@@ -73,7 +73,7 @@ abstract class Authenticate
                 $claims = [
                     'iss' => $this->config->boxAppSettings->clientID,
                     'sub' => $this->config->enterpriseID,
-                    'box_sub_type' => 'enterprise', // 'user'
+                    'box_sub_type' => 'user', // 'enterprise', //
                     'aud' => $this->auth_path,
                     'jti' => base64_encode(random_bytes(64)),
                     'exp' => time() + 45,

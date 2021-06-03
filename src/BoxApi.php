@@ -24,7 +24,8 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $name
      * @param string $parent_folder_id
-     * @return array|\Illuminate\Http\Client\Response|\Illuminate\Support\Collection|mixed|object|string|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function createFolder(string $name, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
     {
@@ -46,7 +47,8 @@ class BoxApi extends ApiAbstract
 
     /**
      * @param string $folder_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function getFolderList(string $folder_id = '0', string $response_type = AS_OBJECT)
     {
@@ -62,6 +64,7 @@ class BoxApi extends ApiAbstract
 
     /**
      * @param string $folder_id
+     * @param string $response_type
      * @return array|object|void
      */
     public function getFolderInfo(string $folder_id = '0', string $response_type = AS_OBJECT)
@@ -79,7 +82,8 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param array $data
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function updateFolder(string $folder_id, array $data = [], string $response_type = AS_OBJECT)
     {
@@ -100,15 +104,13 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param string $name
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function renameFolder(string $folder_id, string $name, string $response_type = AS_OBJECT)
     {
         try {
-            $this->setData([
-                'name' => static::name($name),
-            ]);
-            $response = $this->updateFolder($folder_id, [], $response_type);
+            $response = $this->updateFolder($folder_id, ['name' => static::name($name)], $response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -119,17 +121,17 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param string $parent_folder_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function replaceFolder(string $folder_id, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
     {
         try {
-            $this->setData([
+            $response = $this->updateFolder($folder_id, [
                 'parent' => [
                     'id' => $parent_folder_id,
                 ],
-            ]);
-            $response = $this->updateFolder($folder_id, [], $response_type);
+            ], $response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -140,7 +142,8 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $folder_id
      * @param bool $recursive
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function deleteFolder(string $folder_id, bool $recursive = true, string $response_type = AS_IT)
     {
@@ -167,7 +170,8 @@ class BoxApi extends ApiAbstract
 
     /**
      * @param string $folder_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function getFolderCollaborations(string $folder_id, string $response_type = AS_OBJECT)
     {
@@ -185,7 +189,8 @@ class BoxApi extends ApiAbstract
      * @param string $folder_id
      * @param string $user_email
      * @param string $role
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function createFolderCollaborations(string $folder_id, string $user_email, string $role = ROLE_VIEWER_UPLOADER, string $response_type = AS_OBJECT)
     {
@@ -213,7 +218,8 @@ class BoxApi extends ApiAbstract
     /**
      * @param string $collaboration_id
      * @param string $role
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function updateCollaborations(string $collaboration_id, string $role = ROLE_VIEWER_UPLOADER, string $response_type = AS_OBJECT)
     {
@@ -232,7 +238,8 @@ class BoxApi extends ApiAbstract
 
     /**
      * @param string $collaboration_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function deleteFolderCollaborations(string $collaboration_id, string $response_type = AS_IT)
     {
@@ -248,7 +255,8 @@ class BoxApi extends ApiAbstract
 
     /**
      * @param string $file_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function getFileInfo(string $file_id, string $response_type = AS_OBJECT)
     {
@@ -266,7 +274,8 @@ class BoxApi extends ApiAbstract
      * @param string $filepath
      * @param string $name
      * @param string $parent_folder_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function uploadFile(string $filepath, string $name, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
     {
@@ -291,7 +300,8 @@ class BoxApi extends ApiAbstract
 
     /**
      * @param string $file_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function deleteFile(string $file_id, string $response_type = AS_IT)
     {
@@ -307,7 +317,8 @@ class BoxApi extends ApiAbstract
 
     /**
      * @param string $user_id
-     * @return array|object|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
     public function getUser(string $user_id = 'me', string $response_type = AS_OBJECT)
     {

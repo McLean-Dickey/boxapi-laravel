@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 abstract class Authenticate
 {
     /**
-     * @var string
+     * @var string $auth_path
      */
     protected $auth_path = 'https://api.box.com/oauth2/token';
 
@@ -87,6 +87,7 @@ abstract class Authenticate
                     'assertion' => JWT::encode($claims, $key, 'RS512'),
                 ];
 
+                /** @var \Illuminate\Http\Client\Response $response */
                 $response = Http::asForm()->post($this->auth_path, $data);
 
                 if ($response->successful())

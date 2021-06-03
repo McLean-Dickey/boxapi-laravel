@@ -14,7 +14,7 @@ use Kaswell\BoxApi\Auth\Authenticate;
 class ApiAbstract extends Authenticate
 {
     /**
-     * @var string
+     * @var string $base_api_url
      */
     protected $base_api_url = 'https://api.box.com/2.0/';
 
@@ -23,30 +23,33 @@ class ApiAbstract extends Authenticate
      */
     protected $bodyFormat = 'json';
 
+    /**
+     * @var string $contentType
+     */
     protected $contentType = 'application/json';
 
     /**
-     * @var array
+     * @var array $errors
      */
     protected $errors = [];
 
     /**
-     * @var array
+     * @var array $data
      */
     protected $data = [];
 
     /**
-     * @var int
+     * @var int $status_code
      */
     protected $status_code;
 
     /**
-     * @var string
+     * @var string $status_message
      */
     protected $status_message = '';
 
     /**
-     * @var \Illuminate\Http\Client\Response
+     * @var \Illuminate\Http\Client\Response $response
      */
     private $response;
 

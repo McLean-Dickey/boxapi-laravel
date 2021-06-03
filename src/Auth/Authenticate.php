@@ -61,13 +61,12 @@ abstract class Authenticate
     /**
      * @return void
      */
-    protected function getAccessToken(): void
+    private function getAccessToken(): void
     {
         try {
             if (config('boxapi.dev_mode')) {
                 $this->token = $this->dev_token;
             } else {
-
                 $key = openssl_pkey_get_private($this->config->boxAppSettings->appAuth->privateKey, $this->config->boxAppSettings->appAuth->passphrase);
 
                 $claims = [
@@ -90,14 +89,34 @@ abstract class Authenticate
                 /** @var \Illuminate\Http\Client\Response $response */
                 $response = Http::asForm()->post($this->auth_path, $data);
 
-                if ($response->successful())
-                    $this->token = $response->json('access_token', '')['access_token'];
-
+                if ($response->successful()) $this->token = $response->object()->access_token ?? '';
             }
         } catch (Exception $exception) {
             return;
         }
         Cache::put($this->config->enterpriseID, $this->token, now()->addSeconds(45));
+    }
+
+    /**
+     * @return void
+     */
+    private function getClientCredentialGrant(): void
+    {
+        try {
+            $data = [
+                'client_id' => $this->config->boxAppSettings->clientID,
+                'client_secret' => $this->config->boxAppSettings->clientSecret,
+                'grant_type' => 'client_credentials',
+                'box_subject_type' => 'enterprise',
+                'box_subject_id' => $this->config->enterpriseID,
+            ];
+
+            $response = Http::asForm()->post($this->auth_path, $data);
+
+            if ($response->successful()) $this->token = $response->object()->access_token ?? '';
+        } catch (Exception $exception) {
+            return;
+        }
     }
 
 
@@ -108,4 +127,11 @@ abstract class Authenticate
     {
         return $this->token;
     }
+    /*
+     * --data-urlencode ‘client_id=<client_id>’ \
+     * --data-urlencode ‘client_secret=<client_secret>’ \
+     * --data-urlencode ‘grant_type=client_credentials’ \
+     * --data-urlencode ‘box_subject_type=enterprise’ \
+     * --data-urlencode ‘box_subject_id=<enterprise_id>’
+     */
 }

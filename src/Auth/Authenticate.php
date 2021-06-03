@@ -84,6 +84,7 @@ abstract class Authenticate
 
             $response = Http::asForm()->post($this->auth_path, ['form_params' => $data]);
 
+            dd($response);
             if ($response->successful())
                 $this->token = $response->json('access_token', '');
 

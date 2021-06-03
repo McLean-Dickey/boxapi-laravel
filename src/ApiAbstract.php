@@ -80,7 +80,7 @@ class ApiAbstract extends Authenticate
      * @param int $code
      * @return void
      */
-    protected function setStatus(int $code): array
+    protected function setStatus(int $code)
     {
         $returnedCode = [
             100 => "Continue",

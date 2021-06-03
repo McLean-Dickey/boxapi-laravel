@@ -36,7 +36,7 @@ class BoxApi extends ApiAbstract
                 ]
             ]);
             $path = 'folders';
-            $response = $this->send($path, POST_METHOD)->response();
+            $response = $this->send($path, POST_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -52,7 +52,7 @@ class BoxApi extends ApiAbstract
     {
         try {
             $path = 'folders/' . $folder_id . '/items';
-            $response = $this->send($path, GET_METHOD)->response();
+            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -68,7 +68,7 @@ class BoxApi extends ApiAbstract
     {
         try {
             $path = 'folders/' . $folder_id;
-            $response = $this->send($path, GET_METHOD)->response();
+            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -89,7 +89,7 @@ class BoxApi extends ApiAbstract
 
             $this->setData($data);
             $path = 'folders/' . $folder_id;
-            $response = $this->send($path, PUT_METHOD)->response();
+            $response = $this->send($path, PUT_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -173,7 +173,7 @@ class BoxApi extends ApiAbstract
     {
         try {
             $path = 'folders/' . $folder_id . 'collaborations';
-            $response = $this->send($path, GET_METHOD)->response();
+            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -202,7 +202,7 @@ class BoxApi extends ApiAbstract
                 'role' => $role
             ]);
             $path = 'collaborations';
-            $response = $this->send($path, POST_METHOD)->response();
+            $response = $this->send($path, POST_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -222,7 +222,7 @@ class BoxApi extends ApiAbstract
                 'role' => $role
             ]);
             $path = 'collaborations/' . $collaboration_id;
-            $response = $this->send($path, PUT_METHOD)->response();
+            $response = $this->send($path, PUT_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -254,7 +254,7 @@ class BoxApi extends ApiAbstract
     {
         try {
             $path = 'files/' . $file_id;
-            $response = $this->send($path, GET_METHOD)->response();
+            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -281,7 +281,7 @@ class BoxApi extends ApiAbstract
                 'file' => new \CurlFile($filepath, mime_content_type($filepath), $name)
             ]);
             $path = 'files/content';
-            $response = $this->multipart()->send(POST_METHOD, $path)->response();
+            $response = $this->multipart()->send(POST_METHOD, $path)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -313,7 +313,7 @@ class BoxApi extends ApiAbstract
     {
         try {
             $path = 'users/' . $user_id;
-            $response = $this->send($path, GET_METHOD)->response();
+            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;

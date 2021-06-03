@@ -136,7 +136,7 @@ class ApiAbstract extends Authenticate
      * @param string $response_type
      * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
-    public function response(string $response_type = AS_OBJECT)
+    public function response(string $response_type = 'none')
     {
         if ($this->response instanceof \Illuminate\Http\Client\Response) {
             $this->setStatus($this->response->status());

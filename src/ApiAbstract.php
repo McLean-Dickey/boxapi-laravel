@@ -46,9 +46,9 @@ class ApiAbstract extends Authenticate
     protected $status_message = '';
 
     /**
-     * @var bool
+     * @var \Illuminate\Http\Client\Response
      */
-    protected $as_array = false;
+    private $response;
 
     /**
      * @return $this
@@ -110,19 +110,10 @@ class ApiAbstract extends Authenticate
     }
 
     /**
-     * @return $this
-     */
-    public function asArray()
-    {
-        $this->as_array = true;
-        return $this;
-    }
-
-    /**
      * @param string $path
      * @param string $method
      * @param bool $as_array
-     * @return array|object|void
+     * @return $this
      */
     protected function send(string $path, string $method = GET_METHOD)
     {
@@ -134,24 +125,34 @@ class ApiAbstract extends Authenticate
                 ->bodyFormat($this->bodyFormat)
                 ->withOptions([$this->bodyFormat => $this->data])
                 ->send($method, $path);
+            $this->response = $response;
         } catch (Exception $exception) {
             $this->setErrors($exception);
-            return;
         }
-        return $this->parseResponse($response);
+        return $this;
     }
 
     /**
-     * @param \Illuminate\Http\Client\Response $response
-     * @return object|array|void
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
-    protected function parseResponse(\Illuminate\Http\Client\Response $response)
+    public function response(string $response_type = AS_OBJECT)
     {
-        if ($response instanceof \Illuminate\Http\Client\Response) {
-            $this->setStatus($response->status());
-            return $this->as_array ? $response->json() : $response->object();
+        if ($this->response instanceof \Illuminate\Http\Client\Response) {
+            $this->setStatus($this->response->status());
+            switch ($response_type) {
+                case AS_IT:
+                    return $this->response->body();
+                case AS_ARRAY:
+                    return $this->response->json();
+                case AS_OBJECT:
+                    return $this->response->object();
+                case AS_COLLECT:
+                    return $this->response->collect();
+                default:
+                    return $this->response;
+            }
         }
-        return;
     }
 
     /**

@@ -56,3 +56,8 @@ const RETURNED_CODE = [
     504 => "Gateway Timeout",
     505 => "HTTP Version Not Supported"
 ];
+
+const AS_IT = 'body';
+const AS_ARRAY = 'array';
+const AS_OBJECT = 'object';
+const AS_COLLECT = 'collect';

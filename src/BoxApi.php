@@ -26,7 +26,7 @@ class BoxApi extends ApiAbstract
      * @param string $parent_folder_id
      * @return array|\Illuminate\Http\Client\Response|\Illuminate\Support\Collection|mixed|object|string|void
      */
-    public function createFolder(string $name, string $parent_folder_id = '0')
+    public function createFolder(string $name, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
     {
         try {
             $this->setData([
@@ -36,7 +36,7 @@ class BoxApi extends ApiAbstract
                 ]
             ]);
             $path = 'folders';
-            $response = $this->send($path, POST_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, POST_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -48,11 +48,11 @@ class BoxApi extends ApiAbstract
      * @param string $folder_id
      * @return array|object|void
      */
-    public function getFolderList(string $folder_id = '0')
+    public function getFolderList(string $folder_id = '0', string $response_type = AS_OBJECT)
     {
         try {
             $path = 'folders/' . $folder_id . '/items';
-            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, GET_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -64,11 +64,11 @@ class BoxApi extends ApiAbstract
      * @param string $folder_id
      * @return array|object|void
      */
-    public function getFolderInfo(string $folder_id = '0')
+    public function getFolderInfo(string $folder_id = '0', string $response_type = AS_OBJECT)
     {
         try {
             $path = 'folders/' . $folder_id;
-            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, GET_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -81,7 +81,7 @@ class BoxApi extends ApiAbstract
      * @param array $data
      * @return array|object|void
      */
-    public function updateFolder(string $folder_id, array $data = [])
+    public function updateFolder(string $folder_id, array $data = [], string $response_type = AS_OBJECT)
     {
         try {
             if (Arr::has($data, 'name'))
@@ -89,7 +89,7 @@ class BoxApi extends ApiAbstract
 
             $this->setData($data);
             $path = 'folders/' . $folder_id;
-            $response = $this->send($path, PUT_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, PUT_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -102,13 +102,13 @@ class BoxApi extends ApiAbstract
      * @param string $name
      * @return array|object|void
      */
-    public function renameFolder(string $folder_id, string $name)
+    public function renameFolder(string $folder_id, string $name, string $response_type = AS_OBJECT)
     {
         try {
             $this->setData([
                 'name' => static::name($name),
             ]);
-            $response = $this->updateFolder($folder_id);
+            $response = $this->updateFolder($folder_id, [], $response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -121,7 +121,7 @@ class BoxApi extends ApiAbstract
      * @param string $parent_folder_id
      * @return array|object|void
      */
-    public function replaceFolder(string $folder_id, string $parent_folder_id = '0')
+    public function replaceFolder(string $folder_id, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
     {
         try {
             $this->setData([
@@ -129,7 +129,7 @@ class BoxApi extends ApiAbstract
                     'id' => $parent_folder_id,
                 ],
             ]);
-            $response = $this->updateFolder($folder_id);
+            $response = $this->updateFolder($folder_id, [], $response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -142,7 +142,7 @@ class BoxApi extends ApiAbstract
      * @param bool $recursive
      * @return array|object|void
      */
-    public function deleteFolder(string $folder_id, bool $recursive = true)
+    public function deleteFolder(string $folder_id, bool $recursive = true, string $response_type = AS_IT)
     {
         try {
             $folder_entries = $this->getFolderList($folder_id);
@@ -157,7 +157,7 @@ class BoxApi extends ApiAbstract
                 }
             }
             $path = 'folders/' . $folder_id . '?recursive=' . $recursive;
-            $response = $this->send($path, DELETE_METHOD)->response(AS_IT);
+            $response = $this->send($path, DELETE_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -169,11 +169,11 @@ class BoxApi extends ApiAbstract
      * @param string $folder_id
      * @return array|object|void
      */
-    public function getFolderCollaborations(string $folder_id)
+    public function getFolderCollaborations(string $folder_id, string $response_type = AS_OBJECT)
     {
         try {
             $path = 'folders/' . $folder_id . 'collaborations';
-            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, GET_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -187,7 +187,7 @@ class BoxApi extends ApiAbstract
      * @param string $role
      * @return array|object|void
      */
-    public function createFolderCollaborations(string $folder_id, string $user_email, string $role = ROLE_VIEWER_UPLOADER)
+    public function createFolderCollaborations(string $folder_id, string $user_email, string $role = ROLE_VIEWER_UPLOADER, string $response_type = AS_OBJECT)
     {
         try {
             $this->setData([
@@ -202,7 +202,7 @@ class BoxApi extends ApiAbstract
                 'role' => $role
             ]);
             $path = 'collaborations';
-            $response = $this->send($path, POST_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, POST_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -215,14 +215,14 @@ class BoxApi extends ApiAbstract
      * @param string $role
      * @return array|object|void
      */
-    public function updateCollaborations(string $collaboration_id, string $role = ROLE_VIEWER_UPLOADER)
+    public function updateCollaborations(string $collaboration_id, string $role = ROLE_VIEWER_UPLOADER, string $response_type = AS_OBJECT)
     {
         try {
             $this->setData([
                 'role' => $role
             ]);
             $path = 'collaborations/' . $collaboration_id;
-            $response = $this->send($path, PUT_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, PUT_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -234,11 +234,11 @@ class BoxApi extends ApiAbstract
      * @param string $collaboration_id
      * @return array|object|void
      */
-    public function deleteFolderCollaborations(string $collaboration_id)
+    public function deleteFolderCollaborations(string $collaboration_id, string $response_type = AS_IT)
     {
         try {
             $path = 'collaborations/' . $collaboration_id;
-            $response = $this->send($path, DELETE_METHOD)->response(AS_IT);
+            $response = $this->send($path, DELETE_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -250,11 +250,11 @@ class BoxApi extends ApiAbstract
      * @param string $file_id
      * @return array|object|void
      */
-    public function getFileInfo(string $file_id)
+    public function getFileInfo(string $file_id, string $response_type = AS_OBJECT)
     {
         try {
             $path = 'files/' . $file_id;
-            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, GET_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -268,7 +268,7 @@ class BoxApi extends ApiAbstract
      * @param string $parent_folder_id
      * @return array|object|void
      */
-    public function uploadFile(string $filepath, string $name, string $parent_folder_id = '0')
+    public function uploadFile(string $filepath, string $name, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
     {
         try {
             $this->setData([
@@ -281,7 +281,7 @@ class BoxApi extends ApiAbstract
                 'file' => new \CurlFile($filepath, mime_content_type($filepath), $name)
             ]);
             $path = 'files/content';
-            $response = $this->multipart()->send(POST_METHOD, $path)->response(AS_OBJECT);
+            $response = $this->multipart()->send(POST_METHOD, $path)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -293,11 +293,11 @@ class BoxApi extends ApiAbstract
      * @param string $file_id
      * @return array|object|void
      */
-    public function deleteFile(string $file_id)
+    public function deleteFile(string $file_id, string $response_type = AS_IT)
     {
         try {
             $path = 'files/' . $file_id;
-            $response = $this->send($path, DELETE_METHOD)->response(AS_IT);
+            $response = $this->send($path, DELETE_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;
@@ -309,11 +309,11 @@ class BoxApi extends ApiAbstract
      * @param string $user_id
      * @return array|object|void
      */
-    public function getUser(string $user_id = 'me')
+    public function getUser(string $user_id = 'me', string $response_type = AS_OBJECT)
     {
         try {
             $path = 'users/' . $user_id;
-            $response = $this->send($path, GET_METHOD)->response(AS_OBJECT);
+            $response = $this->send($path, GET_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;

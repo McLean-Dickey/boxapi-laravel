@@ -57,6 +57,7 @@ const RETURNED_CODE = [
     505 => "HTTP Version Not Supported"
 ];
 
+const FULL_RESPONSE = 'none';
 const AS_IT = 'body';
 const AS_ARRAY = 'array';
 const AS_OBJECT = 'object';

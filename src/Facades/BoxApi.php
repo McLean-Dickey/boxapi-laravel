@@ -9,8 +9,6 @@ use Kaswell\BoxApi\BoxApi as BoxApiMethods;
  * Class BoxApi
  * @package Kaswell\BoxApi\Facades
  *
- * @method static void asArray()
- *
  * @method static array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void createFolder(string $name, string $parent_folder_id = '0')
  * @method static array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void getFolderList(string $folder_id = '0')
  * @method static array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void getFolderInfo(string $folder_id = '0')

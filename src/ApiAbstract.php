@@ -31,12 +31,12 @@ class ApiAbstract extends Authenticate
     /**
      * @var array $errors
      */
-    protected $errors = [];
+    protected $errors = EMPTY_ARRAY;
 
     /**
      * @var array $data
      */
-    protected $data = [];
+    protected $data = EMPTY_ARRAY;
 
     /**
      * @var int $status_code
@@ -153,9 +153,18 @@ class ApiAbstract extends Authenticate
                 case AS_COLLECT:
                     return $this->response->collect();
                 default:
-                    return $this->response;
+                    return $this->get();
             }
         }
+    }
+
+    /**
+     * @return \Illuminate\Http\Client\Response|void
+     */
+    public function get()
+    {
+        if (!is_null($this->response))
+            return $this->response;
     }
 
     /**

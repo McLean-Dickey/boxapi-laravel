@@ -85,7 +85,7 @@ class BoxApi extends ApiAbstract
      * @param string $response_type
      * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
-    public function updateFolder(string $folder_id, array $data = [], string $response_type = AS_OBJECT)
+    public function updateFolder(string $folder_id, array $data = EMPTY_ARRAY, string $response_type = AS_OBJECT)
     {
         try {
             if (Arr::has($data, 'name'))

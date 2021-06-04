@@ -41,7 +41,7 @@ or You can optionally publish the config file with:
 php artisan vendor:publish --provider="Kaswell\BoxApi\BoxApiServiceProvider" --tag="config"
 ```
 
-Usage
+Basic Usage
 ------
 
 You can use class:
@@ -54,28 +54,6 @@ or use facade:
 use Kaswell\BoxApi\Facades\BoxApi;
 $response = BoxApi::getFolderInfo();
 ```
-
-### Methods
-
-- `createFolder(string $name, string $parent_folder_id = '0')`
-- `getFolderList(string $folder_id = '0')`
-- `getFolderInfo(string $folder_id = '0')`
-- `updateFolder(string $folder_id, array $data = [])`
-- `renameFolder(string $folder_id, string $name)`
-- `replaceFolder(string $folder_id, string $parent_folder_id = '0')`
-- `deleteFolder(string $folder_id, bool $recursive = true)`
-
-- `getFolderCollaborations(string $folder_id)`
-- `createFolderCollaborations(string $folder_id, string $user_email, string $role = 'viewer uploader')`
-- `updateCollaborations(string $collaboration_id, string $role = 'viewer uploader')`
-- `deleteFolderCollaborations(string $collaboration_id)`
-
-- `getFileInfo(string $file_id)`
-- `uploadFile(string $filepath, string $name, string $parent_folder_id = '0')`
-- `deleteFile(string $file_id)`
-
-- `getUser(string $user_id = 'me')`
-
 
 Changelog
 ------

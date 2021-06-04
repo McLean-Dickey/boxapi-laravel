@@ -15,7 +15,7 @@ Documentation
 
 You'll find the documentation on [https://docs.nonium.by/laravel-boxapi](https://docs.nonium.by/laravel-boxapi).
 
-Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving the activity log? Feel free to create an issue on GitHub, we'll try to address it as soon as possible.
+Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving the library? Feel free to create an issue on GitHub, we'll try to address it as soon as possible.
 
 Installation
 ------

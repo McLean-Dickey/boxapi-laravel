@@ -19,6 +19,10 @@ class BoxApiServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/boxapi.php' => config_path('boxapi.php'),
         ], 'config');
+
+        $this->publishes([
+            __DIR__ . '/Auth/box_app_config.json' => base_path('storage/app/box_app_config.json'),
+        ], 'app-config');
     }
 
 

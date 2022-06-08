@@ -27,7 +27,7 @@ composer require kaswell/laravel-boxapi
 
 The package will automatically register itself.
 
-Download from [Box Developers](https://gdmg.app.box.com/developers/console) config json file and save into `/storage/app/box_app_config.json` and add into env file next optional constants
+Download from [Box Developers](https://app.box.com/developers/console) config json file and save into `/storage/app/box_app_config.json` and add into env file next optional constants
 ```bash 
 BOX_APP_DEV_MODE=false
 BOX_APP_CONFIG_FILE="box_app_config.json"

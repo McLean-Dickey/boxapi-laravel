@@ -39,6 +39,11 @@ class ApiAbstract extends Authenticate
     protected $data = EMPTY_ARRAY;
 
     /**
+     * @var array $files
+     */
+    protected $files = EMPTY_ARRAY;
+
+    /**
      * @var int $status_code
      */
     protected $status_code;
@@ -92,6 +97,16 @@ class ApiAbstract extends Authenticate
     }
 
     /**
+     * @param array $data
+     * @return $this
+     */
+    protected function setFiles(array $files)
+    {
+        $this->files = array_merge($this->files, $files);
+        return $this;
+    }
+
+    /**
      * @param int $code
      * @return void
      */
@@ -122,13 +137,15 @@ class ApiAbstract extends Authenticate
     {
         try {
             /** @var \Illuminate\Http\Client\Response $response */
-            $response = Http::retry(1, 5)->withToken($this->token(), 'Bearer')
+            $request = Http::retry(1, 5)->withToken($this->token(), 'Bearer')
                 ->baseUrl($this->base_api_url)
                 ->contentType($this->contentType)
-                ->bodyFormat($this->bodyFormat)
-                ->withOptions([$this->bodyFormat => $this->data])
-                ->send($method, $path);
-            $this->response = $response;
+                ->bodyFormat($this->bodyFormat);
+
+            foreach ($this->files as $file) {
+                $request->attach(...$file);
+            }
+            $this->response = $request->send($method, $path, [$this->bodyFormat => $this->data]);
         } catch (Exception $exception) {
             $this->setErrors($exception);
         }

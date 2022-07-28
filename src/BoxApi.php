@@ -5,6 +5,7 @@ namespace Kaswell\BoxApi;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 /**
  * Class BoxApi
@@ -12,6 +13,8 @@ use Illuminate\Support\Str;
  */
 class BoxApi extends ApiAbstract
 {
+    const BOX_UPLOAD_URL = 'https://upload.box.com/api/2.0/';
+
     /**
      * @param string $name
      * @return string
@@ -27,7 +30,7 @@ class BoxApi extends ApiAbstract
      * @param string $response_type
      * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
-    public function createFolder(string $name, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
+    public function createFolder(string $name, string $parent_folder_id = '0', string $response_type = FULL_RESPONSE)
     {
         try {
             $this->setData([
@@ -145,7 +148,7 @@ class BoxApi extends ApiAbstract
      * @param string $response_type
      * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
-    public function deleteFolder(string $folder_id, bool $recursive = true, string $response_type = AS_IT)
+    public function deleteFolder(string $folder_id, bool $recursive = true, string $response_type = FULL_RESPONSE)
     {
         try {
             $folder_entries = $this->getFolderList($folder_id);
@@ -159,7 +162,7 @@ class BoxApi extends ApiAbstract
                     }
                 }
             }
-            $path = 'folders/' . $folder_id . '?recursive=' . $recursive;
+            $path = 'folders/' . $folder_id . '?recursive=true';
             $response = $this->send($path, DELETE_METHOD)->response($response_type);
         } catch (Exception $exception) {
             $this->setErrors($exception);
@@ -277,20 +280,53 @@ class BoxApi extends ApiAbstract
      * @param string $response_type
      * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
      */
-    public function uploadFile(string $filepath, string $name, string $parent_folder_id = '0', string $response_type = AS_OBJECT)
+    public function uploadFile(string $filepath, string $name, string $parent_folder_id = '0', string $response_type = FULL_RESPONSE)
     {
         try {
-            $this->setData([
-                'attributes' => [
+            $options = [
+                'attributes' => json_encode([
                     'name' => $name,
                     'parent' => [
                         'id' => $parent_folder_id
-                    ]
-                ],
-                'file' => new \CurlFile($filepath, mime_content_type($filepath), $name)
-            ]);
-            $path = 'files/content';
-            $response = $this->multipart()->send(POST_METHOD, $path)->response($response_type);
+                    ],
+                ]),
+            ];
+
+            $response = Http::retry(1, 5)->withToken($this->token(), 'Bearer')
+                ->baseUrl(self::BOX_UPLOAD_URL)
+                ->attach('file', file_get_contents($filepath), $name)
+                ->post('files/content', $options);
+        } catch (Exception $exception) {
+            $this->setErrors($exception);
+            return;
+        }
+        return $response;
+    }
+
+    /**
+     * @param int $id
+     * @param string $filepath
+     * @param string $name
+     * @param string $parent_folder_id
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
+     */
+    public function uploadFileRevision(int $id, string $filepath, string $name, string $parent_folder_id = '0', string $response_type = FULL_RESPONSE)
+    {
+        try {
+            $options = [
+                'attributes' => json_encode([
+                    'name' => $name,
+                    'parent' => [
+                        'id' => $parent_folder_id
+                    ],
+                ]),
+            ];
+
+            $response = Http::retry(1, 5)->withToken($this->token(), 'Bearer')
+                ->baseUrl(self::BOX_UPLOAD_URL)
+                ->attach('file', file_get_contents($filepath), $name)
+                ->post("files/{$id}/content", $options);
         } catch (Exception $exception) {
             $this->setErrors($exception);
             return;

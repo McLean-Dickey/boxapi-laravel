@@ -352,6 +352,33 @@ class BoxApi extends ApiAbstract
     }
 
     /**
+     * @param string $file_id
+     * @param string $parent_folder_id
+     * @param string $name
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
+     */
+    public function copyFile(string $file_id, string $parent_folder_id = '0', string $name = '', string $response_type = FULL_RESPONSE)
+    {
+        try {
+            $data = [
+                'parent' => [
+                    'id' => $parent_folder_id
+                ],
+            ];
+            if ($name) $data['name'] = $name;
+            $this->setData($data);
+
+            $path = "files/{$file_id}/copy";
+            $response = $this->send($path, POST_METHOD)->response($response_type);
+        } catch (Exception $exception) {
+            $this->setErrors($exception);
+            return;
+        }
+        return $response;
+    }
+
+    /**
      * @param string $user_id
      * @param string $response_type
      * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void

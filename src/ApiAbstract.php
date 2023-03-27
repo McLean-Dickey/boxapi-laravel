@@ -145,7 +145,9 @@ class ApiAbstract extends Authenticate
             foreach ($this->files as $file) {
                 $request->attach(...$file);
             }
-            $this->response = $request->send($method, $path, [$this->bodyFormat => $this->data]);
+            $params = [];
+            if (!empty($this->data)) $params = [$this->bodyFormat => $this->data];
+            $this->response = $request->send($method, $path, $params);
         } catch (Exception $exception) {
             $this->setErrors($exception);
         }

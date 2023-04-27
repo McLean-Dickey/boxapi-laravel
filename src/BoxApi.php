@@ -151,14 +151,14 @@ class BoxApi extends ApiAbstract
     public function deleteFolder(string $folder_id, bool $recursive = true, string $response_type = FULL_RESPONSE)
     {
         try {
-            $folder_entries = $this->getFolderList($folder_id);
-            if (isset($folder_entries['total_count']) && $folder_entries['total_count'] > 0) {
-                foreach ($folder_entries['entries'] as $entry) {
-                    if ($entry['type'] === 'file') {
-                        $this->deleteFile($entry['id']);
+            $folder_entries = $this->getFolderList($folder_id, AS_OBJECT);
+            if (isset($folder_entries->total_count) && $folder_entries->total_count > 0) {
+                foreach ($folder_entries->entries as $entry) {
+                    if ($entry->type === 'file') {
+                        $this->deleteFile($entry->id);
                     }
-                    if ($entry['type'] === 'folder') {
-                        $this->deleteFolder($entry['id']);
+                    if ($entry->type === 'folder') {
+                        $this->deleteFolder($entry->id);
                     }
                 }
             }

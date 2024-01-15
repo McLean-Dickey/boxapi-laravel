@@ -304,6 +304,31 @@ class BoxApi extends ApiAbstract
     }
 
     /**
+     * @param string $file_id
+     * @param string $parent_folder_id
+     * @param string $response_type
+     * @return array|object|string|\Illuminate\Support\Collection|\Illuminate\Http\Client\Response|void
+     */
+    public function moveFile(string $file_id, string $parent_folder_id = '0', string $response_type = FULL_RESPONSE)
+    {
+        try {
+            $data = [
+                'parent' => [
+                    'id' => $parent_folder_id
+                ],
+            ];
+            $this->setData($data);
+
+            $path = 'files/' . $file_id;
+            $response = $this->send($path, PUT_METHOD)->response($response_type);
+        } catch (Exception $exception) {
+            $this->setErrors($exception);
+            return;
+        }
+        return $response;
+    }
+
+    /**
      * @param int $id
      * @param string $filepath
      * @param string $name
